@@ -1,37 +1,49 @@
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:switch_app_freezed/domain/model/switch_state.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:switch_app_freezed/data/repository/switch_repository.dart';
+import 'package:switch_app_freezed/domain/model/switch_state.dart';
 
-// final switchNotifierProvider =
-//     StreamNotifierProvider<SwitchNotifier, SwitchState>(() => SwitchNotifier());
-// const String documentId = 'x6qOk5aT9ojUgoBJrEWS';
+/// SwitchNotifierプロバイダー
+final switchNotifierProvider =
+    StreamNotifierProvider<SwitchNotifier, SwitchState>(() => SwitchNotifier());
 
-// class SwitchNotifier extends StreamNotifier<SwitchState> {
-//   @override
-//   Stream<SwitchState> build() {
-//     return ref
-//         .watch(switchRepositoryProvider)
-//         .subscribeSwitchIsEnabled(documentId: documentId)
-//         .map((switchDto) => SwitchState.fromDto(switchDto));
-//   }
+/// ドキュメントID
+const String documentId = 'x6qOk5aT9ojUgoBJrEWS';
 
-//   /// SwitchをOnにする。
-//   Future<void> switchOn() async {
-//     state = const AsyncValue.loading();
-//     await ref.read(switchRepositoryProvider).switchOn(documentId: documentId);
+/// SwitchNotifierクラス
+///
+/// SwitchをOn/Offするためのクラス
+class SwitchNotifier extends StreamNotifier<SwitchState> {
+  @override
+  Stream<SwitchState> build() {
+    // switchRepositoryProviderからsubscribeSwitchIsEnabledメソッドを呼び出す。
+    // その結果をSwitchStateに変換して返す。
+    return ref
+        .watch(switchRepositoryProvider)
+        .subscribeSwitchIsEnabled(documentId: documentId)
+        .map((switchDto) => SwitchState.fromDto(switchDto));
+  }
 
-//     // SwitchStateを更新する。
-//     state = AsyncValue.data(SwitchState(isEnabled: true));
+  /// SwitchをOnにする。
+  Future<void> switchOn() async {
+    state = const AsyncValue.loading();
 
-//     // これを調べる。
-//     ref.invalidateSelf();
-//   }
+    // switchRepositoryProviderからswitchOnメソッドを呼び出す。
+    await ref.read(switchRepositoryProvider).switchOn(documentId: documentId);
 
-//   /// SwitchをOffにする。
-//   Future<void> switchOff() async {
-//     await ref.read(switchRepositoryProvider).switchOff(documentId: documentId);
+    // SwitchStateを更新する。
+    state = AsyncValue.data(SwitchState(isEnabled: true));
 
-//     /// SwitchStateを更新する。
-//     state = AsyncValue.data(SwitchState(isEnabled: false));
-//     ref.invalidateSelf();
-//   }
-// }
+    // これを調べる。
+    ref.invalidateSelf();
+  }
+
+  /// SwitchをOffにする。
+  Future<void> switchOff() async {
+    // switchRepositoryProviderからswitchOffメソッドを呼び出す。
+    await ref.read(switchRepositoryProvider).switchOff(documentId: documentId);
+
+    /// SwitchStateを更新する。
+    state = AsyncValue.data(SwitchState(isEnabled: false));
+    ref.invalidateSelf();
+  }
+}
