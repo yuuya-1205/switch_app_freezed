@@ -24,26 +24,29 @@ class SwitchNotifier extends StreamNotifier<SwitchState> {
   }
 
   /// SwitchをOnにする。
+  ///
+  /// SwitchStateがローディング状態になる。
+  /// 3秒後にisEnabled=trueになり、FirebaseのデータをisEnabled: trueに更新する。
+  /// ref.invalidateSelfにより、Notifierのbuild関数が再実行され、SwitchStateが更新される。
   Future<void> switchOn() async {
     state = const AsyncValue.loading();
 
     // switchRepositoryProviderからswitchOnメソッドを呼び出す。
     await ref.read(switchRepositoryProvider).switchOn(documentId: documentId);
 
-    // SwitchStateを更新する。
-    state = AsyncValue.data(SwitchState(isEnabled: true));
-
-    // これを調べる。
+    // ref.invalidateSelf()→Provider自身を無効化→buildメソッドが再実行され、最新のデータが取得される。
     ref.invalidateSelf();
   }
 
   /// SwitchをOffにする。
+  ///
+  /// FirebaseのデータをisEnabled: falseに更新する。
+  /// ref.invalidateSelfにより、Notifierのbuild関数が再実行され、SwitchStateが更新される。
   Future<void> switchOff() async {
     // switchRepositoryProviderからswitchOffメソッドを呼び出す。
     await ref.read(switchRepositoryProvider).switchOff(documentId: documentId);
 
-    /// SwitchStateを更新する。
-    state = AsyncValue.data(SwitchState(isEnabled: false));
+    // buildメソッドが再実行され、SwitchStateが更新される。
     ref.invalidateSelf();
   }
 }
