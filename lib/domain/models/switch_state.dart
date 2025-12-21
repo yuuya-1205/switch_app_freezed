@@ -4,9 +4,11 @@ import 'package:switch_app_freezed/data/dto/switch_dto.dart';
 part 'switch_state.freezed.dart';
 
 @freezed
-/// SwitchStateモデル
+/// {@template switch_state}
+/// SwitchStateクラス
 ///
-/// 画面に表示するデータを格納するモデル←（格納するって表現は適切なのか？）
+/// [isEnabled] が含まれています。
+/// {@endtemplate}
 class SwitchState with _$SwitchState {
   /// ファクトリーコンストラクタ
   const factory SwitchState({required bool isEnabled}) = _SwitchState;

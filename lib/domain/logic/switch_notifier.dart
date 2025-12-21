@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:switch_app_freezed/data/repository/switch_repository.dart';
-import 'package:switch_app_freezed/domain/model/switch_state.dart';
+import 'package:switch_app_freezed/domain/models/switch_state.dart';
 
 /// SwitchNotifierプロバイダー
 final switchNotifierProvider =
