@@ -3,13 +3,14 @@ import 'package:switch_app_freezed/data/dto/switch_dto.dart';
 
 import 'package:switch_app_freezed/data/repository/firebase_firestore_repository.dart';
 
+/// SwitchRepositoryプロバイダー
 final switchRepositoryProvider = Provider<SwitchRepository>((ref) {
   return SwitchRepository(ref);
 });
 
 /// SwitchRepositoryクラス
 ///
-/// Firebaseから取得したデータを取得および更新するためのクラス
+/// Firebaseから取得したデータを取得および更新を行うためのクラス
 class SwitchRepository {
   /// コンストラクタ
   SwitchRepository(this.ref);
