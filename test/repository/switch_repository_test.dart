@@ -29,4 +29,44 @@ void main() {
 
     expect(result.isEnabled, false);
   });
+
+  test('switchOnが正しくFirebaseのデータを更新できるか', () async {
+    when(mockFirestore.collection('switch')).thenReturn(mockCollection);
+    when(mockCollection.doc(documentId)).thenReturn(mockDocRef);
+    when(mockDocRef.snapshots()).thenAnswer((_) => Stream.value(mockSnapshot));
+    when(mockSnapshot.data()).thenReturn({'isEnabled': true});
+
+    final container = createContainer(
+      overrides: [firebaseFirestoreProvider.overrideWithValue(mockFirestore)],
+    );
+
+    final repository = container.read(switchRepositoryProvider);
+    await repository.switchOn(documentId: documentId);
+
+    final result = await repository
+        .subscribeSwitchIsEnabled(documentId: documentId)
+        .first;
+
+    expect(result.isEnabled, true);
+  });
+
+  test('switchOffが正しくFirebaseのデータを更新できるか', () async {
+    when(mockFirestore.collection('switch')).thenReturn(mockCollection);
+    when(mockCollection.doc(documentId)).thenReturn(mockDocRef);
+    when(mockDocRef.snapshots()).thenAnswer((_) => Stream.value(mockSnapshot));
+    when(mockSnapshot.data()).thenReturn({'isEnabled': false});
+
+    final container = createContainer(
+      overrides: [firebaseFirestoreProvider.overrideWithValue(mockFirestore)],
+    );
+
+    final repository = container.read(switchRepositoryProvider);
+    await repository.switchOff(documentId: documentId);
+
+    final result = await repository
+        .subscribeSwitchIsEnabled(documentId: documentId)
+        .first;
+
+    expect(result.isEnabled, false);
+  });
 }
