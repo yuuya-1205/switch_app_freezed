@@ -31,13 +31,10 @@ void main() {
         ],
       );
 
-      // 読み込む
-      container.read(switchNotifierProvider);
+      // 初期化してインスタンスを作成する。
+      await container.read(switchNotifierProvider.future);
 
-      // 3秒待って、SwitchDto（isEnabled: false）からSwitchState（isEnabled: false）になっていることを確認する。
-      await Future.delayed(Duration(seconds: 3));
-
-      // 読み込んだSwitchState（isEnabled: false）になっていることを確認する。
+      // SwitchState（isEnabled: false）になっていることを確認する。
       expect(
         container.read(switchNotifierProvider).value,
         SwitchState(isEnabled: false),
